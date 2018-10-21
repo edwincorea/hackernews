@@ -5,6 +5,7 @@ const DEFAULT_QUERY = 'redux'
 const DEFAULT_HPP = '100'
 
 const PATH_BASE = 'https://hn.algolia.com/api/v1'
+
 const PATH_SEARCH = '/search'
 const PARAM_SEARCH = 'query='
 const PARAM_PAGE = 'page='
@@ -19,6 +20,7 @@ class App extends Component {
 			results: null,
 			searchKey: '',
 			searchTerm: DEFAULT_QUERY,
+			error: null,
 		}
 	}
 
@@ -54,7 +56,10 @@ class App extends Component {
 		fetch(url)
 			.then(response => response.json())
 			.then(result => this.setSearchTopStories(result))
-			.catch(e => console.log(e))
+			.catch(error => {
+				console.log(error)
+				this.setState({ error })
+			})
 	}
 
 	onSearchChange = (event) => {
@@ -95,7 +100,8 @@ class App extends Component {
 		const { 
 			searchTerm, 			
 			results, 
-			searchKey
+			searchKey,
+			error
 		} = this.state
 
 		const page = (
@@ -121,12 +127,16 @@ class App extends Component {
 						Search
 			  		</Search>
 				</div>
-				{ 
-					<Table
-						list={list}
-						onDismiss={this.onDismiss}
-					/>
-				}
+				{ error
+					? <div className="interactions">
+					  	<p>Something went wrong.</p>
+					  </div>
+          			: <Table
+            			list={list}
+            			onDismiss={this.onDismiss}
+          			  />
+        		}
+
 				<div className="interactions">
 			  		<Button onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>
 						More...
