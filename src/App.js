@@ -57,8 +57,6 @@ class App extends Component {
 	render() {
 		const { searchTerm, result } = this.state
 
-		if (!result) return null
-
 		return (
 			<div className="page">
 				<div className="interactions">
@@ -69,11 +67,15 @@ class App extends Component {
             			Search
 					</Search>
 				</div>
-				<Table
-					list={result.hits}
-					pattern={searchTerm}
-					onDismiss={this.onDismiss}
-				/>
+				{
+					result 
+						? <Table
+							list={result.hits}
+							pattern={searchTerm}
+							onDismiss={this.onDismiss}
+						/>
+						: null
+				}
 			</div>
 		)
 	}
