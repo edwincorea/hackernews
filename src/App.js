@@ -173,7 +173,10 @@ const Search = ({
 		</button>
 	</form>
 
-const Table = ({ list, onDismiss }) =>
+const Table = ({ 
+	list, 
+	onDismiss 
+}) =>
 	<div className="table">
 		{ list.map(item =>
 			<div key={item.objectID} className="table-row">
@@ -201,7 +204,11 @@ const Table = ({ list, onDismiss }) =>
 		)}
 	</div>
 
-const Button = ({ onClick, className = '', children }) =>
+const Button = ({ 
+	onClick, 
+	className = '', 
+	children 
+}) =>
 	<button
 		onClick={onClick}
 		className={className}
@@ -211,3 +218,9 @@ const Button = ({ onClick, className = '', children }) =>
 	</button>
 
 export default App
+
+export {
+	Search,
+	Table,
+	Button
+}
