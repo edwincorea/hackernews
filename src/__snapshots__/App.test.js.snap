@@ -49,9 +49,13 @@ exports[`Button has a valid snapshot 1`] = `
 `;
 
 exports[`Search has a valid snapshot 1`] = `
-<form>
+<form
+  onSubmit={[Function]}
+>
   <input
+    onChange={[Function]}
     type="text"
+    value="react/redux"
   />
   <button
     type="submit"

@@ -28,15 +28,21 @@ describe('App', () => {
 
 describe('Search', () => {
 
+	const props = {
+		value: 'react/redux',
+		onChange(){},
+		onSubmit(){},
+	}
+
 	it('renders without crashing', () => {
 		const div = document.createElement('div')
-	  	ReactDOM.render(<Search>Search</Search>, div)
+	  	ReactDOM.render(<Search { ...props }>Search</Search>, div)
 	  	ReactDOM.unmountComponentAtNode(div)
 	})
   
 	test('has a valid snapshot', () => {
 	  	const component = renderer.create(
-			<Search>Search</Search>
+			<Search { ...props }>Search</Search>
 	  	)
 		  
 		const tree = component.toJSON()
@@ -46,6 +52,10 @@ describe('Search', () => {
 })
 
 describe('Button', () => {
+	const props = {
+		className: 'button-inline',
+		onClick() {},
+	}
 
 	it('renders without crashing', () => {
 		const div = document.createElement('div')
@@ -63,10 +73,6 @@ describe('Button', () => {
 	})
 
 	it('shows one item in list', () => {
-		const props = {
-			className: 'button-inline'
-		}
-
 		const element = shallow(
 			<Button { ...props }>Give Me More</Button>
 		)
@@ -80,9 +86,10 @@ describe('Table', () => {
 
 	const props = {
 	  	list: [
-			{ title: '1', author: '1', num_comments: 1, points: 2, objectID: 'y' },
-			{ title: '2', author: '2', num_comments: 1, points: 2, objectID: 'z' },
-	  	],
+			{ title: '1', author: '1', num_comments: 1, points: 2, objectID: '1' },
+			{ title: '2', author: '2', num_comments: 1, points: 2, objectID: '2' },
+		  ],
+		  onDismiss(){},
 	}
   
 	it('renders without crashing', () => {

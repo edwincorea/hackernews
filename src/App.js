@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 require('./App.css')
 
 const DEFAULT_QUERY = 'redux'
@@ -206,7 +207,7 @@ const Table = ({
 
 const Button = ({ 
 	onClick, 
-	className = '', 
+	className, 
 	children 
 }) =>
 	<button
@@ -217,6 +218,36 @@ const Button = ({
 		{children}
 	</button>
 
+Button.defaultProps = {
+	className: '',
+}
+
+Button.propTypes = {
+	onClick: PropTypes.func.isRequired,
+	className: PropTypes.string,
+	children: PropTypes.node.isRequired
+}	
+
+Table.propTypes = {
+	list: PropTypes.arrayOf(
+		PropTypes.shape({
+			objectID: PropTypes.string.isRequired,
+			author: PropTypes.string,
+			url: PropTypes.string,
+			num_comments: PropTypes.number,
+			points: PropTypes.number,
+	  	})
+	).isRequired,
+	onDismiss: PropTypes.func.isRequired,
+}
+
+Search.propTypes = {
+	value: PropTypes.string.isRequired,
+	onChange: PropTypes.func.isRequired,
+	onSubmit: PropTypes.func.isRequired,
+	children: PropTypes.node.isRequired
+}
+  
 export default App
 
 export {
