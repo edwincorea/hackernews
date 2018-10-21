@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import PropTypes from 'prop-types'
+import { sortBy } from 'lodash'
 require('./App.css')
 
 const DEFAULT_QUERY = 'redux'
@@ -13,6 +14,14 @@ const PARAM_SEARCH = 'query='
 const PARAM_PAGE = 'page='
 const PARAM_HPP = 'hitsPerPage='
 
+const SORTS = {
+	NONE: list => list,
+	TITLE: list => sortBy(list, 'title'),
+	AUTHOR: list => sortBy(list, 'author'),
+	COMMENTS: list => sortBy(list, 'num_comments').reverse(),
+	POINTS: list => sortBy(list, 'points').reverse(),
+}
+  
 class App extends Component {
 
 	_isMounted = false
@@ -26,6 +35,7 @@ class App extends Component {
 			searchTerm: DEFAULT_QUERY,
 			error: null,
 			isLoading: false,
+			sortKey: 'NONE',
 		}
 	}
 
@@ -109,13 +119,18 @@ class App extends Component {
 		})
 	}
 
+	onSort = (sortKey) => {
+		this.setState({ sortKey })
+	}
+
 	render() {
 		const { 
 			searchTerm, 			
 			results, 
 			searchKey,
 			error,
-			isLoading
+			isLoading,
+			sortKey
 		} = this.state
 
 		const page = (
@@ -147,6 +162,8 @@ class App extends Component {
 					  </div>
           			: <Table
             			list={list}
+						sortKey={sortKey}
+						onSort={this.onSort}
             			onDismiss={this.onDismiss}
           			  />
         		}
@@ -195,12 +212,56 @@ class Search extends Component {
 	}
 }
 
+const Sort = ({ sortKey, onSort, children }) =>
+	<Button onClick={() => onSort(sortKey)}>
+		{children}
+	</Button>
+
 const Table = ({ 
-	list, 
+	list,
+	sortKey,
+	onSort, 
 	onDismiss 
 }) =>
 	<div className="table">
-		{ list.map(item =>
+		<div className="table-header">
+			<span style={{ width: '40%' }}>
+				<Sort
+					sortKey={'TITLE'}
+					onSort={onSort}
+				>
+          			Title
+				</Sort>
+			</span>
+			<span style={{ width: '30%' }}>
+				<Sort
+					sortKey={'AUTHOR'}
+					onSort={onSort}
+				>
+          			Author
+				</Sort>
+			</span>
+			<span style={{ width: '10%' }}>
+				<Sort
+					sortKey={'COMMENTS'}
+					onSort={onSort}
+				>
+          			Comments
+				</Sort>
+			</span>
+			<span style={{ width: '10%' }}>
+				<Sort
+					sortKey={'POINTS'}
+					onSort={onSort}
+				>
+          			Points
+				</Sort>
+			</span>
+			<span style={{ width: '10%' }}>
+        		Archive
+			</span>
+		</div>
+		{ SORTS[sortKey](list).map(item =>
 			<div key={item.objectID} className="table-row">
 				<span style={{ width: '40%' }}>
 					<a href={item.url}>{item.title}</a>
