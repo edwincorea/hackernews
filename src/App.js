@@ -23,6 +23,27 @@ const SORTS = {
 	POINTS: list => sortBy(list, 'points').reverse(),
 }
 
+const updateSearchTopStoriesState = (hits, page) => (prevState) => {
+	const { searchKey, results } = prevState
+  
+	const oldHits = results && results[searchKey]
+		? results[searchKey].hits
+	  	: []
+  
+	const updatedHits = [
+	  	...oldHits,
+	  	...hits
+	]
+  
+	return {
+	  	results: {
+			...results,
+			[searchKey]: { hits: updatedHits, page }
+	  	},
+	  	isLoading: false
+	}
+}  
+  
 class App extends Component {
 
 	_isMounted = false
@@ -53,24 +74,7 @@ class App extends Component {
 
 	setSearchTopStories = (result) => {
 		const { hits, page } = result
-		const { searchKey, results } = this.state
-		
-		const oldHits = results && results[searchKey]
-			? results[searchKey].hits
-			: []
-
-		const updatedHits = [
-			...oldHits,
-			...hits
-		]
-
-		this.setState({ 
-			results: { 
-				...results,
-				[searchKey]: { hits: updatedHits, page }
-			},
-			isLoading: false
-		 })
+		this.setState(updateSearchTopStoriesState(hits, page))
 	}
 
 	fetchSearchTopStories = (searchTerm, page = 0) => {
@@ -391,5 +395,6 @@ export default App
 export {
 	Search,
 	Table,
-	Button
+	Button,
+	updateSearchTopStoriesState
 }
